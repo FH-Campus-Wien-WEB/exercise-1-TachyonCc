@@ -5,30 +5,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movies!</title>
-    <style>
-        /* Part 3: Your styling goes here */
-    </style>
+    <link rel="stylesheet" href="style.css">
     <script>
-        function reverseString(s) {
-            return s.split("").reverse().join("");
-        }
-
         window.onload = function () {
-            const xhr = new XMLHttpRequest()
+            const xhr = new XMLHttpRequest();
+
             xhr.onload = function () {
-                const bodyElement = document.querySelector("body")
+                const bodyElement = document.querySelector("body");
+
                 if (xhr.status == 200) {
-		            /* Part 2: Build the HTML elements here and append them to the body */ 
-                    bodyElement.append(reverseString(xhr.responseText))
+                    const movies = JSON.parse(xhr.responseText);
+
+                    const pageTitle = document.createElement("h1");
+                    pageTitle.textContent = "My Movies";
+                    bodyElement.appendChild(pageTitle);
+
+                    movies.forEach(function (movie) {
+                        const article = document.createElement("article");
+
+                        const title = document.createElement("h2");
+                        title.textContent = movie.Title;
+
+                        const poster = document.createElement("img");
+                        poster.src = movie.Poster;
+                        poster.alt = movie.Title + " poster";
+
+                        const released = document.createElement("p");
+                        released.innerHTML = "<strong>Released:</strong> " + movie.Released;
+
+                        const runtime = document.createElement("p");
+                        runtime.innerHTML = "<strong>Runtime:</strong> " + movie.Runtime + " min";
+
+                        const genres = document.createElement("p");
+                        genres.innerHTML = "<strong>Genres:</strong> ";
+                        movie.Genres.forEach(function (genre) {
+                            const genreTag = document.createElement("span");
+                            genreTag.className = "genre";
+                            genreTag.textContent = genre;
+                            genres.appendChild(genreTag);
+                        });
+
+                        const directors = document.createElement("p");
+                        directors.innerHTML = "<strong>Directors:</strong> " + movie.Directors.join(", ");
+
+                        const writers = document.createElement("p");
+                        writers.innerHTML = "<strong>Writers:</strong> " + movie.Writers.join(", ");
+
+                        const actors = document.createElement("p");
+                        actors.innerHTML = "<strong>Actors:</strong> " + movie.Actors.join(", ");
+
+                        const plot = document.createElement("p");
+                        plot.innerHTML = "<strong>Plot:</strong> " + movie.Plot;
+
+                        const metascore = document.createElement("p");
+                        metascore.innerHTML = "<strong>Metascore:</strong> " + movie.Metascore;
+
+                        const imdbRating = document.createElement("p");
+                        imdbRating.innerHTML = "<strong>IMDb Rating:</strong> " + movie.imdbRating;
+
+                        article.appendChild(title);
+                        article.appendChild(poster);
+                        article.appendChild(released);
+                        article.appendChild(runtime);
+                        article.appendChild(genres);
+                        article.appendChild(directors);
+                        article.appendChild(writers);
+                        article.appendChild(actors);
+                        article.appendChild(plot);
+                        article.appendChild(metascore);
+                        article.appendChild(imdbRating);
+
+                        bodyElement.appendChild(article);
+                    });
                 } else {
-                    bodyElement.append("Daten konnten nicht geladen werden, Status " + xhr.status + " - " + xhr.statusText)
+                    bodyElement.append("Daten konnten nicht geladen werden, Status " + xhr.status + " - " + xhr.statusText);
                 }
-            }
-            xhr.open("GET", "/movies")
-            xhr.send()
+            };
+
+            xhr.open("GET", "/movies");
+            xhr.send();
         }
     </script>
-
 </head>
 
 <body>
